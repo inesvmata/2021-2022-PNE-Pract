@@ -16,8 +16,18 @@ def valid_filename():
 
 def seq_read_fasta(filename):
     FOLDER = "./sequences/"
-    seq = open( FOLDER + filename, "r").read()
+    seq = open(FOLDER + filename, "r").read()
     seq = seq[seq.find("\n"):].replace("\n","")
     return seq
+
+def seq_len(sequence):
+    import Seq0
+    list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
+    for l in list_genes:
+        print(len(Seq0.seq_read_fasta(l[0])))
+        print(len(Seq0.seq_read_fasta(l[1])))
+        print(len(Seq0.seq_read_fasta(l[2])))
+        print(len(Seq0.seq_read_fasta(l[3])))
+        print(len(Seq0.seq_read_fasta(l[4])))
 
 
