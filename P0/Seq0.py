@@ -20,14 +20,14 @@ def seq_read_fasta(filename):
     seq = seq[seq.find("\n"):].replace("\n","")
     return seq
 
-def seq_len(sequence):
-    import Seq0
+def seq_len(): #import Seq0
+    FOLDER = "./sequences/"
     list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
     for l in list_genes:
-        print(len(Seq0.seq_read_fasta(l[0])))
-        print(len(Seq0.seq_read_fasta(l[1])))
-        print(len(Seq0.seq_read_fasta(l[2])))
-        print(len(Seq0.seq_read_fasta(l[3])))
-        print(len(Seq0.seq_read_fasta(l[4])))
+        print(len(seq_read_fasta(l[0])))
+        print(len(seq_read_fasta(l[1])))
+        print(len(seq_read_fasta(l[2])))
+        print(len(seq_read_fasta(l[3])))
+        print(len(seq_read_fasta(l[4])))
 
 
