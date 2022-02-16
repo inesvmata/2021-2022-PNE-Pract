@@ -30,6 +30,13 @@ def seq_len():
         print(len(seq_read_fasta(l[3])))
         print(len(seq_read_fasta(l[4])))
 
-
-
+def seq_count_base():
+    d = {"U5": "", "FRAT1": "", "ADA": "", "FXN": "", "RNU6_269P": ""}
+    for gene in d:
+        gene_U5 = seq_read_fasta(gene[0])
+        gene_FRAT1 = seq_read_fasta(gene[1])
+        gene_ADA = seq_read_fasta(gene[2])
+        gene_FXN = seq_read_fasta(gene[3])
+        gene_RNU6_269P = seq_read_fasta(gene[4])
+        
 
