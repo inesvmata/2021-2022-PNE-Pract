@@ -1,7 +1,7 @@
 class Seq:
     "A class for representing sequences"
     def __init__(self,strbases):
-        self.strbases = strbases #used to store the bases you have passed in self.strbases
+        self.strbases = strbases #used to store the bases you have passed in self.strbases #self.strbases es un atributte del nuevo objeto
         if not self.valid_sequence(): #no arguments if you put the self. before the function
             self.strbases = "ERROR"
             print("ERROR!!!!")
