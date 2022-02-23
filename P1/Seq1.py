@@ -26,3 +26,6 @@ class Seq:
 
     def len(self):
         return len(self.strbases)
+    def seq_read_fasta(self, filename):
+        f = open("./sequences/" + filename, "r").read()
+        self.strbases = f[f.find("\n"):].replace("\n", "")
