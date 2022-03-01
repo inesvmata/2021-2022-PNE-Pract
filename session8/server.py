@@ -11,7 +11,7 @@ number_con = 0
 # create an INET, STREAMing socket
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
-    serversocket.bind((IP, PORT))
+    serversocket.bind((IP, PORT)) #SEE THAT IT IS A TUPLE (), SI NO NO FUNCIONA.
     # become a server socket
     # MAX_OPEN_REQUESTS connect requests before refusing outside connections
     serversocket.listen(MAX_OPEN_REQUESTS)
