@@ -1,0 +1,10 @@
+from Seq1 import Seq
+seq1 = Seq("")
+seq2 = Seq("ACTGA")
+seq3 = Seq("Invalid sequence")
+print(f"Sequence : (Length: {seq1.new_len()}) {seq1}")
+print(f"A:", seq1.count_base2()[3], ", ", "C:", seq1.count_base2()[0], ", ", "G:", seq1.count_base2()[1], ", ", "T:", seq1.count_base2()[2], ",",)
+print(f"Sequence : (Length: {seq2.len()}) {seq2}")
+print(f"A:", seq2.count_base()[3], ", ", "C:", seq2.count_base()[0], ", ", "G:", seq2.count_base()[1], ", ", "T:", seq2.count_base()[2], ",",)
+print(f"Sequence : (Length: {seq3.new_len()}) {seq3}")
+print(f"A:", seq3.count_base2()[3], ", ", "C:", seq3.count_base2()[0], ", ", "G:", seq3.count_base2()[1], ", ", "T:", seq3.count_base2()[2], ",",)

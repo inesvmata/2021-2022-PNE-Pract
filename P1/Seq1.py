@@ -26,6 +26,81 @@ class Seq:
 
     def len(self):
         return len(self.strbases)
+
+    def new_len(self):
+        new_len = ""
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            return len(new_len)
+
+    def count_base(self):
+        count_C = 0
+        count_G = 0
+        count_T = 0
+        count_A = 0
+        for i in self.strbases:
+            if i == "C":
+                count_C += 1
+            elif i == "G":
+                count_G += 1
+            elif i == "T":
+                count_T += 1
+            elif i == "A":
+                count_A += 1
+        return count_C, count_G, count_T, count_A
+    def count_base2(self,strbases="NULL"):
+        count_C = 0
+        count_G = 0
+        count_T = 0
+        count_A = 0
+        new_len = ""
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            for i in new_len:
+                if i == "C":
+                    count_C += 1
+                elif i == "G":
+                    count_G += 1
+                elif i == "T":
+                    count_T += 1
+                elif i == "A":
+                    count_A += 1
+        return count_C, count_G, count_T, count_A
+
+    def seq_count(self):
+        d = {'A': 0, 'T': 0, 'C': 0, 'G': 0}
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            return d
+        else:
+            for i in self.strbases:
+                if i == "C":
+                    d['C'] += 1
+                elif i == "G":
+                    d['G'] += 1
+                elif i == "T":
+                    d['T'] += 1
+                elif i == "A":
+                    d['A'] += 1
+            return d
+
+    def seq_reverse(self):
+        reverse = []
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            reverse = self.strbases
+        else:
+            for i in self.strbases:
+                reverse = self.strbases[::-1]
+        return reverse
+
+    def seq_complement(self):
+        d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
+        complement = ""
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            complement = self.strbases
+        else:
+            for i in self.strbases:
+                new_bases = d[i]
+                complement += new_bases
+        return complement
+
     def seq_read_fasta(self, filename):
-        f = open("./sequences/" + filename, "r").read()
+        f = open("../P0/" + "./sequences/" + filename, "r").read() #el P0 lo he puesto yo pero no funciona
         self.strbases = f[f.find("\n"):].replace("\n", "")
