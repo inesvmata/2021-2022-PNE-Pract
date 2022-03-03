@@ -104,3 +104,4 @@ class Seq:
     def seq_read_fasta(self, filename):
         f = open("../P0/" + "./sequences/" + filename, "r").read() #el P0 lo he puesto yo pero no funciona
         self.strbases = f[f.find("\n"):].replace("\n", "")
+        return self.strbases
