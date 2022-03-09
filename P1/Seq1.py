@@ -105,3 +105,20 @@ class Seq:
         f = open("../P0/" + "./sequences/" + filename, "r").read() #el P0 lo he puesto yo pero no funciona
         self.strbases = f[f.find("\n"):].replace("\n", "")
         return self.strbases
+    #def max_gene(self):
+        #list_genes = ["C", "G", "T", "A"]
+        #list_count = [count_C, count_G, count_T, count_A]
+        #list_zipped = zip(list_genes, list_count)
+
+    def max_base(self, count_C, count_G, count_T, count_A, sequence):
+        max_base = ""
+        for i in sequence:
+            if (count_C > count_G) and (count_C > count_T) and (count_C > count_A):
+                max_base = "C"
+            elif (count_G > count_C) and (count_G > count_T) and (count_G > count_A):
+                max_base = "G"
+            elif (count_T > count_G) and (count_T > count_C) and (count_T > count_A):
+                max_base = "T"
+            elif (count_A > count_G) and (count_A > count_T) and (count_A > count_C):
+                max_base = "A"
+        return max_base
