@@ -30,7 +30,7 @@ class Client:
        # Return the response
        return response
 
-class Seq(Client):
+class Seq():
     def __init__(self,strbases="NULL"):
         self.strbases = strbases
         if not self.valid_sequence():
