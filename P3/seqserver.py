@@ -1,4 +1,5 @@
 import socket
+import Seqclass
 
 # -- Step 1: create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -8,7 +9,7 @@ ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # Configure the Server's IP and PORT
 PORT = 8080
-IP = "localhost"
+IP = "127.0.0.1"
 
 # -- Step 1: create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,8 +35,7 @@ while True:
     # -- Read the message from the client
     # -- The received message is in raw bytes
     msg_raw = cs.recv(2048)
-    msg = msg_raw.decode().replace("\n",
-                                   "").strip()  # usually the server recieves msg\n, so we have to eliminate the end of line space
+    msg = msg_raw.decode().replace("\n", "").strip()  # usually the server recieves msg\n, so we have to eliminate the end of line space
     cmd = msg.split(' ')[0]
     print(cmd)
     # -- Print the received message
@@ -43,8 +43,21 @@ while True:
         arg = msg.split(' ')[1]
         print(arg)
     print(f"Message received: {msg}")
-    if msg == "PING":
+
+    # -- Manage message
+    if cmd == "PING":
         response = "OK!\n"
+        print("PING command!")
+
+    elif cmd == "REV":
+        response = arg[::-1]
+
+    elif cmd == "INFO":
+        base_count = Seqclass.count_base(arg)
+        response = "Sequence: " + arg + "\n"
+        response += "Total length: " + str(len(arg)) + "\n"
+
+
     else:
         response = "This command is not available in the server.\n"
 
