@@ -122,9 +122,10 @@ class Seq():
         return message
 
     def info_operation(self, arg):
-        base_count = self.seq_count(arg)
+        base_count = self.seq_count()
         response = "Sequence: " + arg + "\n"
         response += "Total length: " + str(len(arg)) + "\n"
+        response += self.convert_message(base_count)
         return response
 
     def seq_reverse(self):

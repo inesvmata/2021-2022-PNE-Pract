@@ -52,6 +52,11 @@ while True:
     elif cmd == "REV":
         response = arg[::-1]
 
+    elif cmd == "COMP":
+        termcolor.cprint(cmd, "green")
+        response = Seq.seq_complement(arg)
+        print(response)
+
     elif cmd == "INFO":
         termcolor.cprint(cmd, "green")
         response = Seq.info_operation(arg)
