@@ -38,6 +38,7 @@ while True:
     msg_raw = cs.recv(2048)
     msg = msg_raw.decode().replace("\n", "").strip()  # usually the server recieves msg\n, so we have to eliminate the end of line space
     cmd = msg.split(' ')[0]
+
     # -- Print the received message
     if cmd != "PING":
         arg = msg.split(' ')[1]
@@ -54,17 +55,17 @@ while True:
 
     elif cmd == "GET":
         termcolor.cprint(cmd, "green")
-        list_genes = ["AACCGGTT, AAAACGT, ACCCCGGT, ACGTTTT"]
-        if arg == 1:
+        list_genes = ["AACCGGTT", "AAAACGT", "ACCCCGGT", "ACGTTTT"]
+        if arg == "1":
             response = list_genes[0]
             print(response)
-        elif arg == 2:
+        elif arg == "2":
             response = list_genes[1]
             print(response)
-        elif arg == 3:
+        elif arg == "3":
             response = list_genes[2]
             print(response)
-        elif arg == 4:
+        elif arg == "4":
             response = list_genes[3]
             print(response)
         else:
