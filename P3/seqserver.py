@@ -1,5 +1,6 @@
 import socket
-import Seqclass
+from client import Seq
+import termcolor
 
 # -- Step 1: create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -37,25 +38,24 @@ while True:
     msg_raw = cs.recv(2048)
     msg = msg_raw.decode().replace("\n", "").strip()  # usually the server recieves msg\n, so we have to eliminate the end of line space
     cmd = msg.split(' ')[0]
-    print(cmd)
     # -- Print the received message
     if cmd != "PING":
         arg = msg.split(' ')[1]
-        print(arg)
     print(f"Message received: {msg}")
 
     # -- Manage message
     if cmd == "PING":
         response = "OK!\n"
-        print("PING command!")
+        termcolor.cprint("PING command!", "green")
+        print(response)
 
     elif cmd == "REV":
         response = arg[::-1]
 
     elif cmd == "INFO":
-        base_count = Seqclass.count_base(arg)
-        response = "Sequence: " + arg + "\n"
-        response += "Total length: " + str(len(arg)) + "\n"
+        termcolor.cprint(cmd, "green")
+        response = Seq.info_operation(arg)
+        print(response)
 
 
     else:
