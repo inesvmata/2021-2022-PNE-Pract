@@ -52,9 +52,27 @@ while True:
     elif cmd == "REV":
         response = arg[::-1]
 
+    elif cmd == "GET":
+        termcolor.cprint(cmd, "green")
+        list_genes = ["AACCGGTT, AAAACGT, ACCCCGGT, ACGTTTT"]
+        if arg == 1:
+            response = list_genes[0]
+            print(response)
+        elif arg == 2:
+            response = list_genes[1]
+            print(response)
+        elif arg == 3:
+            response = list_genes[2]
+            print(response)
+        elif arg == 4:
+            response = list_genes[3]
+            print(response)
+        else:
+            response = "You have to enter an argument between 1 and 4"
+
     elif cmd == "COMP":
         termcolor.cprint(cmd, "green")
-        response = Seq.seq_complement(arg)
+        response = str(Seq.seq_complement(arg))
         print(response)
 
     elif cmd == "INFO":
