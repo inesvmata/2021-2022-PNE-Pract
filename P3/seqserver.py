@@ -2,6 +2,7 @@ import socket
 from client import Seq
 import termcolor
 
+
 # -- Step 1: create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -54,8 +55,16 @@ while True:
 
     elif cmd == "REV":
         termcolor.cprint(cmd, "green")
-        response = arg[::-1]
-        print(response)
+        list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
+        for l in list_genes:
+            if arg == l:
+                s = Seq()
+                response = str(s.seq_read_fasta(arg))
+                print(response)
+            else:
+                seq = Seq(arg)
+                response = seq.seq_reverse()
+                print(response)
 
     elif cmd == "GET":
         termcolor.cprint(cmd, "green")
@@ -70,12 +79,14 @@ while True:
 
     elif cmd == "COMP":
         termcolor.cprint(cmd, "green")
-        response = str(Seq.seq_complement(arg))
+        seq = Seq(arg)
+        response = str(seq.seq_complement())
         print(response)
 
     elif cmd == "INFO":
         termcolor.cprint(cmd, "green")
-        response = Seq.info_operation(arg)
+        seq = Seq(arg)
+        response = str(seq.info_operation(arg))
         print(response)
 
 

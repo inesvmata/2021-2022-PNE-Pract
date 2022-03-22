@@ -1,7 +1,7 @@
 from client import Client
 
 PRACTICE = 3
-EXERCISE = 4
+EXERCISE = 6
 
 print(f"-----| Practice {PRACTICE}, Exercise {EXERCISE} |------")
 
@@ -13,7 +13,7 @@ PORT = 8081
 c = Client(IP, PORT)
 
 # -- Test the ping method
-response = c.talk("COMP AAGGGTTTCCCCC")
+response = c.talk("REV U5")
 print(response)
 
 
