@@ -1,7 +1,7 @@
 from client import Client
 
 PRACTICE = 3
-EXERCISE = 6
+EXERCISE = 7
 
 print(f"-----| Practice {PRACTICE}, Exercise {EXERCISE} |------")
 
@@ -13,8 +13,12 @@ PORT = 8081
 c = Client(IP, PORT)
 
 # -- Test the ping method
-response = c.talk("GENE U5")
-print(response)
+list_get = ["GET 0", "GET 1", "GET 2", "GET 3", "GET4"]
+for e in list_get:
+    print("TESTING", e)
+    response = c.talk(e)
+    print(response)
+
 
 
 # -- Print the IP and PORTs

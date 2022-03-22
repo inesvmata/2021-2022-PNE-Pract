@@ -59,6 +59,7 @@ class Seq():
         f = open("../P0/" + "./sequences/" + filename, "r").read()
         self.strbases = f[f.find("\n"):].replace("\n", "")
         return self.strbases
+
     def len(self):
         return len(self.strbases)
 
@@ -110,15 +111,15 @@ class Seq():
         else:
             for i in self.strbases:
                 d[i] += 1
-                total = sum(d.values())
-                for k,v in d.items():
-                    d[k] = [v, (v * 100) / total]
+            total = sum(d.values())
+            for k,v in d.items():
+                d[k] = [v, (v * 100) / total]
         return d
 
     def convert_message(self, base_count):
         message = ""
         for k, v in base_count.items():
-            message += k + ":" + str(v[0]) + " (" + str(v[1]) + "%)" + "\n"
+            message += k + ":" + str(v[0]) + " (" + str(round(v[1], 2)) + "%)" + "\n"
         return message
 
     def info_operation(self, arg):

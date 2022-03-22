@@ -53,7 +53,7 @@ while True:
         termcolor.cprint("PING command!", "green")
         print(response)
 
-    elif cmd == "REV":
+    elif cmd == "GENE":
         termcolor.cprint(cmd, "green")
         list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
         for l in list_genes:
@@ -61,10 +61,12 @@ while True:
                 s = Seq()
                 response = str(s.seq_read_fasta(arg))
                 print(response)
-            else:
-                seq = Seq(arg)
-                response = seq.seq_reverse()
-                print(response)
+
+    elif cmd == "REV":
+        termcolor.cprint(cmd, "green")
+        seq = Seq(arg)
+        response = seq.seq_reverse()
+        print(response)
 
     elif cmd == "GET":
         termcolor.cprint(cmd, "green")
