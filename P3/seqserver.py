@@ -9,8 +9,10 @@ ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # Configure the Server's IP and PORT
-PORT = 8080
+PORT = 8081
 IP = "127.0.0.1"
+
+SEQUENCES = ["AACCGGGTTT", "GGTTAAACCC", "TTGGAAACCC", "CCCAAAGGGTTTT", "AAGGTTTCCC"]
 
 # -- Step 1: create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,7 +31,7 @@ print("The server is configured!")
 while True:
     # -- Waits for a client to connect
     print("Waiting for Clients to connect")
-    (cs, client_ip_port) = ls.accept()
+    (cs, client_ip_port) = ls.accept() #ERROR
 
     print("A client has connected to the server!")
 
@@ -51,25 +53,20 @@ while True:
         print(response)
 
     elif cmd == "REV":
+        termcolor.cprint(cmd, "green")
         response = arg[::-1]
+        print(response)
 
     elif cmd == "GET":
         termcolor.cprint(cmd, "green")
-        list_genes = ["AACCGGTT", "AAAACGT", "ACCCCGGT", "ACGTTTT"]
-        if arg == "1":
-            response = list_genes[0]
-            print(response)
-        elif arg == "2":
-            response = list_genes[1]
-            print(response)
-        elif arg == "3":
-            response = list_genes[2]
-            print(response)
-        elif arg == "4":
-            response = list_genes[3]
+        index = int(arg)
+        if index <= 4:
+            sequence = SEQUENCES[index]
+            response = sequence
             print(response)
         else:
             response = "You have to enter an argument between 1 and 4"
+            print(response)
 
     elif cmd == "COMP":
         termcolor.cprint(cmd, "green")

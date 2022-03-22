@@ -7,13 +7,12 @@ print(f"-----| Practice {PRACTICE}, Exercise {EXERCISE} |------")
 
 # -- Parameters of the server to talk to
 IP = "127.0.0.1"
-PORT = 8080
+PORT = 8081
 
 # -- Create a client object
 c = Client(IP, PORT)
 
 # -- Test the ping method
-c.talk("INFO AAGGGTTTCCCCC")
 response = c.talk("INFO AAGGGTTTCCCCC")
 print(response)
 
