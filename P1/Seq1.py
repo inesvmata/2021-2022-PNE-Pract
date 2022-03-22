@@ -1,15 +1,16 @@
 class Seq:
     "A class for representing sequences"
-    def __init__(self,strbases="NULL"):
+    def __init__(self, strbases="NULL"):
         self.strbases = strbases
-        if not self.valid_sequence():
-            self.strbases = "ERROR"
-            print("INVALID sequence created!!!!")
-        elif self.strbases == "":
+        if strbases == "NULL":
+            print("NULL sequence created")
             self.strbases = "NULL"
-            print("NULL sequence created!")
+        elif not self.valid_sequence():
+            print("INVALID Seq!")
+            self.strbases = "ERROR"
         else:
             print("New sequence created!")
+            self.strbases = strbases
 
     def valid_sequence(self): #as this function belongs to Seq class, we have to write it below the init method
         valid = True

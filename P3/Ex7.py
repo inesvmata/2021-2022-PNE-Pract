@@ -45,7 +45,7 @@ print("TESTING GENE...")
 list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
 for g in list_genes:
     print("TESTING", g, "...")
-    response = c.talk(g)
+    response = c.talk("GENE g")
     print(response)
 
 
