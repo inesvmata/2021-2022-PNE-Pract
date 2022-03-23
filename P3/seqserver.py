@@ -70,11 +70,15 @@ while True:
 
     elif cmd == "GET":
         termcolor.cprint(cmd, "green")
+        list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
         index = int(arg)
         if index <= 4:
-            sequence = SEQUENCES[index]
-            response = sequence
+            sequence = list_genes[index]
+            s = Seq()
+            response = str(s.seq_read_fasta(sequence))
             print(response)
+            #response = sequence
+            #print(response)
         else:
             response = "You have to enter an argument between 1 and 4"
             print(response)

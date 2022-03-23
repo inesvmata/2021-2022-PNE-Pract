@@ -19,7 +19,7 @@ response = c.talk("PING")
 print(response)
 
 #EXERCISE 2
-list_get = ["GET 0", "GET 1", "GET 2", "GET 3", "GET4"]
+list_get = ["GET 0", "GET 1", "GET 2", "GET 3", "GET 4"]
 for e in list_get:
     print("TESTING", e, "...")
     response = c.talk(e)
