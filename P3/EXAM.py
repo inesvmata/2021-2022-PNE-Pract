@@ -1,7 +1,7 @@
 from clientseqclasses import Client
 
 PRACTICE = 3
-EXERCISE = 5
+EXERCISE = "EXAM"
 
 print(f"-----| Practice {PRACTICE}, Exercise {EXERCISE} |------")
 
