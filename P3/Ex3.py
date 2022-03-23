@@ -13,7 +13,7 @@ PORT = 8081
 c = Client(IP, PORT)
 
 # -- Test the ping method
-response = c.talk("INFO AAGGGTTTCCCCC")
+response = c.talk("INFO ")
 print(response)
 
 

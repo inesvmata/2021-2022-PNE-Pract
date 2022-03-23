@@ -25,25 +25,26 @@ for e in list_get:
     response = c.talk(e)
     print(response)
 
+seq = c.talk(list_get[0])
+
 #EXERCISE 3
 print("TESTING INFO...")
-response = c.talk("INFO AACCGGGTTT")
+response = c.talk("INFO " + seq)
 print(response)
 
 #EXERCISE 4
 print("TESTING COMP...")
-response = c.talk("COMP AACCGGGTTT")
+response = c.talk("COMP " + seq)
 print(response)
 
 #EXERCISE 5
 print("TESTING REV...")
-response = c.talk("REV AACCGGGTTT")
+response = c.talk("REV " + seq)
 print(response)
 
 #EXERCISE 6
 print("TESTING GENE...")
 list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
-print("TESTING GENE...")
 for g in list_genes:
     response = c.talk("GENE " + str(g))
     print( "Gene", g, ":", response)
