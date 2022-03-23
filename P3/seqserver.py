@@ -95,6 +95,11 @@ while True:
         response = str(seq.info_operation(arg))
         print(response)
 
+    elif cmd == "OPE":
+        termcolor.cprint(cmd, "green")
+        seq = Seq(arg)
+        response = str(seq.add_seq())
+        print(response)
 
     else:
         response = "This command is not available in the server.\n"
