@@ -1,5 +1,5 @@
 from Seq1 import Seq
-seq1 = Seq("")
+seq1 = Seq()
 seq2 = Seq("ACTGA")
 seq3 = Seq("Invalid sequence")
 print(f"Sequence 1: {seq1}")

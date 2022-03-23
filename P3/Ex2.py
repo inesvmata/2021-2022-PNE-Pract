@@ -1,4 +1,4 @@
-from client import Client
+from clientseqclasses import Client
 
 PRACTICE = 3
 EXERCISE = 2

@@ -21,11 +21,10 @@ def seq_read_fasta(filename):
     return seq
 
 def seq_len():
-    import Seq0
     FOLDER = "./sequences/"
     list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
     for l in list_genes:
-        print(len(Seq0.seq_read_fasta(l))) #ponerlo solo una vez pq ya tienes el for loop q hace el len para todas las listas
+        print("Length of", l, ":", len(seq_read_fasta(l))) #ponerlo solo una vez pq ya tienes el for loop q hace el len para todas las listas
 def seq_count_base(sequence):
     count_C = 0
     count_G = 0

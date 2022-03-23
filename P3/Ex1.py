@@ -1,4 +1,4 @@
-from client import Client
+from clientseqclasses import Client
 
 PRACTICE = 3
 EXERCISE = 1
@@ -13,7 +13,6 @@ PORT = 8081
 c = Client(IP, PORT)
 
 # -- Test the ping method
-c.talk("PING")
 response = c.talk("PING")
 print(response)
 

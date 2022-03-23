@@ -1,5 +1,5 @@
 import socket
-from client import Seq
+from clientseqclasses import Seq
 import termcolor
 
 

@@ -1,4 +1,4 @@
-from client import Client
+from clientseqclasses import Client
 
 PRACTICE = 3
 EXERCISE = 7
@@ -43,10 +43,10 @@ print(response)
 #EXERCISE 6
 print("TESTING GENE...")
 list_genes = ["U5", "FRAT1", "ADA", "FXN", "RNU6_269P"]
+print("TESTING GENE...")
 for g in list_genes:
-    print("TESTING", g, "...")
-    response = c.talk("GENE g")
-    print(response)
+    response = c.talk("GENE " + str(g))
+    print( "Gene", g, ":", response)
 
 
 
