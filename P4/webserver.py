@@ -55,6 +55,9 @@ def process_client(s):
         body = pathlib.Path("html/info/C.html").read_text()
     elif route == "/info/G":
         body = pathlib.Path("html/info/G.html").read_text()
+    else:
+        body = pathlib.Path("html/ERROR.html").read_text()
+
 
     # -- Status line: We respond that everything is ok (200 code)
     status_line = "HTTP/1.1 200 OK\n"
