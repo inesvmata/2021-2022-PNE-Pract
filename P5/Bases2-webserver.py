@@ -1,6 +1,7 @@
 import http.server
 import socketserver
 import termcolor
+import pathlib
 
 # Define the Server's port
 PORT = 8080
@@ -29,7 +30,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # Print the resource requested (the path)
         print("  Path: " + self.path)
 
-        contents = "I am the happy server ;)"
+        path = self.requestline.split(" ")[1] #ES LO MISMO QUE EN P4 PERO EN VEZ DE ROUTE, AQUÍ ES PATH
+        if path == "/":
+            contents = pathlib.Path("index.html").read_text()
+        elif path == "/info/A":
+            contents = pathlib.Path("info/A.html").read_text()
+        elif path == "/info/C":
+            contents = pathlib.Path("info/C.html").read_text()
+        elif path == "/info/G":
+            contents = pathlib.Path("info/G.html").read_text()
+        else:
+            contents = pathlib.Path("ERROR.html").read_text()
+
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!
