@@ -22,8 +22,8 @@ ENDPOINT = '/sequence/id'
 PARAMS = '?content-type=application/json'
 URL = ENDPOINT + "/" + genes_dict[GENE] + PARAMS
 
-print(f"\nConnecting to server: {SERVER}\n")
-print(f"URL: {URL}\n")
+print(f"\nServer: {SERVER}")
+print(f"URL: {URL}")
 
 # Connect with the server
 conn = http.client.HTTPConnection(SERVER)
@@ -45,10 +45,10 @@ print(f"Response received!: {r1.status} {r1.reason}\n")
 # -- Read the response's body
 data1 = r1.read().decode("utf-8")
 data1 = json.loads(data1) #to transform it to a dictionary, it transforms the data into its corresponding type.
-print(data1)
-for k,v in data1.items():
-    print("Gene: -->", GENE)
-    print("Description: -->", v['desc']) #ERROR
-    print("Sequence: -->", v['seq'])
+
+
+print("Gene: -->", GENE)
+print("Description: -->", data1['desc']) #ERROR
+print("Sequence: -->", data1['seq'])
 # -- Print the received data
 #print(f"CONTENT: {data1}") #type(data1["ping"]) is an integer number, because json has transformed it into an integer.
