@@ -45,6 +45,7 @@ print(f"Response received!: {r1.status} {r1.reason}\n")
 # -- Read the response's body
 data1 = r1.read().decode("utf-8")
 data1 = json.loads(data1) #to transform it to a dictionary, it transforms the data into its corresponding type.
+print(data1)
 for k,v in data1.items():
     print("Gene: -->", GENE)
     print("Description: -->", v['desc']) #ERROR
