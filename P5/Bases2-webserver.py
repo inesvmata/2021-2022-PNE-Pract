@@ -33,12 +33,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         path = self.requestline.split(" ")[1] #ES LO MISMO QUE EN P4 PERO EN VEZ DE ROUTE, AQUÍ ES PATH
         if path == "/":
             contents = pathlib.Path("index.html").read_text()
-        elif path == "/info/A":
-            contents = pathlib.Path("info/A.html").read_text()
-        elif path == "/info/C":
-            contents = pathlib.Path("info/C.html").read_text()
-        elif path == "/info/G":
-            contents = pathlib.Path("info/G.html").read_text()
+        #try:
+            #if path == "/info/A":
+            #contents = pathlib.Path("info/A.html").read_text()
+        #elif path == "/info/C":
+            #contents = pathlib.Path("info/C.html").read_text()
+        #elif path == "/info/G":
+            #contents = pathlib.Path("info/G.html").read_text()
+        #TIENES QUE PONER QUE SI PONES UN FILENAME QUE EXISTA, LO ABRA. SI NO EXISTE, SE ABRE EL ERROR. #contents = read_html_file(path[1:] + ".html")
         else:
             contents = pathlib.Path("ERROR.html").read_text()
 
@@ -47,7 +49,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)  # -- Status line: OK!
 
         # Define the content-type header:
-        self.send_header('Content-Type', 'text/plain')
+        self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', len(contents.encode()))
 
         # The header is finished
