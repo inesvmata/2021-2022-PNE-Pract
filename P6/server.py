@@ -66,16 +66,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             sequence = arguments["sequence"][0]
             operation = arguments["operation"][0]
             if operation == "rev":
-                contents = read_html_file(path[1:] + ".html") \
+                contents = read_html_file(path[1:] + ".html")\
                     .render(context={
                     "operation": operation,
                     "sequence": sequence[::-1]
                 })
             elif operation == "info":
-                contents = read_html_file(path[1:] + ".html") \
+                contents = read_html_file(path[1:] + ".html")\
                     .render(context={
                     "operation": operation,
-                    "result": info_operation(sequence)
+                    "result": "info_operation(sequence)"
                 })
 
 
