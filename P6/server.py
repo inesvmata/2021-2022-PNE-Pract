@@ -6,13 +6,13 @@ import jinja2 as j
 from urllib.parse import parse_qs, urlparse
 
 
-HTML_FOLDER = "./html/"
+#HTML_FOLDER = "/"
 LIST_SEQUENCES = ["AAAGGGCCCTTTT", "AGGGCCCTT", "GGGTTTCCCAAA", "TTTAAAGGGAAACCCC", "GGTTAACCCTTAAGGAAAA", "AAGGGTTTCCCC"]
 LIST_GENES = ["ADA", "FRAT1", "FXN", "RNU5A", "U5"]
 
 
 def read_html_file(filename):
-    contents = Path(HTML_FOLDER + filename).read_text()
+    contents = Path(filename).read_text()
     contents = j.Template(contents)
     return contents
 
@@ -38,7 +38,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         url_path = urlparse(self.path)
         path = url_path.path
-        arguments = parse_qs(url_path)
+        arguments = parse_qs(url_path.query)
         print(arguments)
         print("The new path is", url_path.path) #these paths have all different paths
 
