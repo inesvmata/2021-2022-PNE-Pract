@@ -5,6 +5,7 @@ import json
 
 SERVER = 'rest.ensembl.org'
 ENDPOINT = '/info/ping'
+#params should be &param1=a
 PARAMS = '?content-type=application/json'
 #URL = SERVER + ENDPOINT + PARAMS
 

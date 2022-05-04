@@ -39,48 +39,37 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         url_path = urlparse(self.path)
         path = url_path.path
         arguments = parse_qs(url_path.query)
+
+
         print(arguments)
         print("The new path is", url_path.path) #these paths have all different paths
 
-        if self.path == "/":
-            contents = read_html_file("index.html").render(context={"n_sequences": len(LIST_SEQUENCES), "genes": LIST_GENES})
+        if path == "/":
+            contents = read_html_file("index.html").render(context={"n_sequence": len(LIST_SEQUENCES), "genes": LIST_GENES})
         elif path == "/ping":
             contents = read_html_file(path[1:] + ".html").render() #THIS IS HOW TO EXTRACT THE FILENAME
         elif path == "/get":
             n_sequence = int(arguments["n_sequence"][0]) #this is always going to be an integer
+            #&number = value
+            #params = "&number=" + str(n_sequence)
+            #ensembl_answer = make_call("/sequence/id", params)
             sequence = LIST_SEQUENCES[n_sequence]
-            contents = read_html_file(path[1:] + ".html")\
-                .render(context = {
-                "n_sequence": n_sequence,
-                "sequence": sequence
-            })
+            contents = read_html_file(path[1:] + ".html").render(context={"n_sequence": n_sequence, "sequence": sequence})
         elif path == "/gene":
             gene_name = arguments["gene_name"][0]
             sequence = Path("./sequences/" + gene_name + ".txt").read_text()
-            contents = read_html_file(path[1:] + ".html")\
-                .render(context = {
-                "gene_name": gene_name,
-                "sequence": sequence
-            })
+            contents = read_html_file(path[1:] + ".html").render(context={"gene_name": gene_name, "sequence": sequence})
         elif path == "/operation":
             sequence = arguments["sequence"][0]
             operation = arguments["operation"][0]
             if operation == "rev":
-                contents = read_html_file(path[1:] + ".html")\
-                    .render(context={
-                    "operation": operation,
-                    "sequence": sequence[::-1]
-                })
+                contents = read_html_file(path[1:] + ".html").render(context={"operation": operation, "sequence": sequence[::-1]})
             elif operation == "info":
-                contents = read_html_file(path[1:] + ".html")\
-                    .render(context={
-                    "operation": operation,
-                    "result": "info_operation(sequence)"
-                })
+                contents = read_html_file(path[1:] + ".html").render(context={"operation": operation, "result": "info_operation(sequence)"})
 
 
         else:
-            contents = Path("/Error.html").read_text()
+            contents = Path("/ERROR.html").read_text()
 
         # Open the form1.html file
         # Read the index from the file
