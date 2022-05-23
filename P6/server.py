@@ -16,15 +16,41 @@ def read_html_file(filename):
     contents = j.Template(contents)
     return contents
 
+
 def seq_count(sequence):
     d = {'A': 0, 'T': 0, 'C': 0, 'G': 0}
     for i in sequence:
-            d[i] += 1
-            total = sum(d.values())
-            for k,v in d.items():
-                d[k] = [v, (v * 100) / total]
+        d[i] += 1
+    total = sum(d.values())
+    for k, v in d.items():
+        d[k] = [v, (v * 100) / total]
     return d
- #def info_operation():
+
+
+def convert_message(base_count):
+    message = ""
+    for k, v in base_count.items():
+        message += k + ":" + str(v[0]) + " (" + str(round(v[1], 2)) + "%)" + "\n"
+    return message
+
+
+def info_operation(arg):
+    base_count = seq_count(arg)
+    response = "Sequence: " + arg + "\n"
+    response += "Total length: " + str(len(arg)) + "\n"
+    response += convert_message(base_count)
+    return response
+
+def seq_complement(sequence):
+    d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
+    complement = ""
+    for i in sequence:
+        new_bases = d[i]
+        complement += new_bases
+    return complement
+
+
+
 # Define the Server's port
 PORT = 8080
 
@@ -76,9 +102,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             sequence = arguments["sequence"][0]
             operation = arguments["operation"][0]
             if operation == "rev":
-                contents = read_html_file(path[1:] + ".html").render(context={"operation": operation, "sequence": sequence[::-1]})
+                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "operation": operation, "result": sequence[::-1]})
             elif operation == "info":
-                contents = read_html_file(path[1:] + ".html").render(context={"operation": operation, "result": "info_operation(sequence)"})
+                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "operation": operation, "result": info_operation(sequence)})
+            elif operation == "comp":
+                contents = read_html_file(path[1:] + ".html").render(
+                    context={"sequence": sequence, "operation": operation, "result": seq_complement(sequence)})
+
 
 
         else:

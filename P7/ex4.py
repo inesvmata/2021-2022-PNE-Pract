@@ -2,6 +2,7 @@
 # -- for requesting the main page from the server
 import http.client
 import json
+from Seqclass import Seq
 
 
 genes_dict = {"SRCAP": "ENSG00000080603",
@@ -50,5 +51,11 @@ print(data1)
 print("Gene: -->", GENE)
 print("Description: -->", data1['desc']) #ERROR
 print("Sequence: -->", data1['seq'])
+s = data1['seq']
+seq = Seq(s)
+print("Total length: -->", Seq.len(seq))
+#print(str(Seq.info_operation(seq)))
+#base_count = Seq.seq_count(seq)
+#print(Seq.convert_message(base_count))
 # -- Print the received data
 #print(f"CONTENT: {data1}") #type(data1["ping"]) is an integer number, because json has transformed it into an integer.

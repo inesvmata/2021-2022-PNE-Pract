@@ -27,11 +27,17 @@
             <option value={{n}}>{{n}}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="GET">
+        <input type="submit" value="GENE">
     </form>
     <form action="/operation">
          Sequence: <input type="text" name="sequence">
+        <br>
+        Select an option:
          Rev: <input type="radio" name="operation" value="rev">
+         Comp: <input type="radio" name="operation" value="comp">
+         Info: <input type="radio" name="operation" value="info">
+        <br>
+        Operation:
         <input type="submit" value="OPERATION">
     </form>
 </head>
