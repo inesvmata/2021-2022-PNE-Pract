@@ -56,9 +56,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             sequence = LIST_SEQUENCES[n_sequence]
             contents = read_html_file(path[1:] + ".html").render(context={"n_sequence": n_sequence, "sequence": sequence})
         elif path == "/gene":
-            gene_name = arguments["gene_name"][0]
-            sequence = Path("./sequences/" + gene_name + ".txt").read_text()
-            contents = read_html_file(path[1:] + ".html").render(context={"gene_name": gene_name, "sequence": sequence})
+            gene = arguments["gene"][0]
+            sequence = Path("./sequences/" + gene + ".txt").read_text()
+            contents = read_html_file(path[1:] + ".html").render(context={"gene_name": gene, "sequence": sequence})
         elif path == "/operation":
             sequence = arguments["sequence"][0]
             operation = arguments["operation"][0]

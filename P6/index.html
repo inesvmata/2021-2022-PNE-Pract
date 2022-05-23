@@ -7,27 +7,27 @@
     <p>Access to the server</p>
     <hr>
     <form action="/ping" >
-        Is the server alive: <input type="submit" value = "PING">
+        Is the server alive: <input type="submit" value ="PING">
     </form>
     <hr>
     <form action="/get">
          Get a sequence. select a sequence number:
         <select name="n_sequence">
             {% for n in range(0,context.n_sequence) %}
-            <option value={{n}}>{{n}} </option>
+            <option value={{n}}>{{n}}</option>
             {% endfor %}
         </select>
         <input type="submit" value="GET">
     </form>
     <hr>
     <form action="/gene">
-         Get a sequence. select a sequence number:
-        <select name="gene_name">
-            {% for n in range(0, context.n_sequence) %}
-            <option value="{{n}}"></option>
+         Get a Gene. select the name:
+        <select name="gene">
+            {% for n in range(0, context.genes) %}
+            <option value={{n}}>{{n}}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="GENE">
+        <input type="submit" value="GET">
     </form>
     <form action="/operation">
          Sequence: <input type="text" name="sequence">
