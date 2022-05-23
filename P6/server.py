@@ -16,7 +16,15 @@ def read_html_file(filename):
     contents = j.Template(contents)
     return contents
 
-
+def seq_count(sequence):
+    d = {'A': 0, 'T': 0, 'C': 0, 'G': 0}
+    for i in sequence:
+            d[i] += 1
+            total = sum(d.values())
+            for k,v in d.items():
+                d[k] = [v, (v * 100) / total]
+    return d
+ #def info_operation():
 # Define the Server's port
 PORT = 8080
 
@@ -46,8 +54,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         if path == "/":
             contents = read_html_file("index.html").render(context={"n_sequence": len(LIST_SEQUENCES), "genes": LIST_GENES})
+
         elif path == "/ping":
             contents = read_html_file(path[1:] + ".html").render() #THIS IS HOW TO EXTRACT THE FILENAME
+
         elif path == "/get":
             n_sequence = int(arguments["n_sequence"][0]) #this is always going to be an integer
             #&number = value
@@ -55,10 +65,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             #ensembl_answer = make_call("/sequence/id", params)
             sequence = LIST_SEQUENCES[n_sequence]
             contents = read_html_file(path[1:] + ".html").render(context={"n_sequence": n_sequence, "sequence": sequence})
+
         elif path == "/gene":
-            gene = arguments["gene"][0]
-            sequence = Path("./sequences/" + gene + ".txt").read_text()
-            contents = read_html_file(path[1:] + ".html").render(context={"gene_name": gene, "sequence": sequence})
+            gene_name = arguments["genes"][0]
+            sequence = Path("./sequences/" + gene_name + ".txt").read_text()
+            sequence = sequence[sequence.find("\n"):].replace("\n", "")
+            contents = read_html_file(path[1:] + ".html").render(context={"gene_name": gene_name, "sequence": sequence})
+
         elif path == "/operation":
             sequence = arguments["sequence"][0]
             operation = arguments["operation"][0]
@@ -69,7 +82,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
 
         else:
-            contents = Path("/ERROR.html").read_text()
+            contents = Path("ERROR.html").read_text()
 
         # Open the form1.html file
         # Read the index from the file

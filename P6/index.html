@@ -22,8 +22,8 @@
     <hr>
     <form action="/gene">
          Get a Gene. select the name:
-        <select name="gene">
-            {% for n in range(0, context.genes) %}
+        <select name="genes">
+            {% for n in context.genes %}
             <option value={{n}}>{{n}}</option>
             {% endfor %}
         </select>
