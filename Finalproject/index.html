@@ -7,40 +7,28 @@
     <h2>Basic level services</h2>
     <p>List of species in the genome database:</p>
     <form action="/listSpecies" >
+        1) List of species in the genome database:
         Limit: <input type="text" name="limit">
         <br>
         <input type="submit" value ="Send">
     </form>
     <hr>
-    <form action="/get">
-         Get a sequence. select a sequence number:
-        <select name="n_sequence">
-            {% for n in range(0,context.n_sequence) %}
-            <option value={{n}}>{{n}}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="GET">
+    <form action="/karyotype">
+         2) Information about the karyotype:
+        <br>
+        Select the species: <input type="text" name="specie">
+        <br>
+        <input type="submit" value ="Send">
     </form>
     <hr>
-    <form action="/gene">
-         Get a Gene. select the name:
-        <select name="genes">
-            {% for n in context.genes %}
-            <option value={{n}}>{{n}}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="GENE">
-    </form>
-    <form action="/operation">
-         Sequence: <input type="text" name="sequence">
+    <form action="/chromosomeLength">
+         3) Chromosome length:
+         <br>
+        Select the species: <input type="text" name="specie">
+        Select a chromosome: <input type="text" name="chromosome">
         <br>
-        Select an option:
-         Rev: <input type="radio" name="operation" value="rev">
-         Comp: <input type="radio" name="operation" value="comp">
-         Info: <input type="radio" name="operation" value="info">
-        <br>
-        Operation:
-        <input type="submit" value="OPERATION">
+        <input type="submit" value ="Send">
+
     </form>
 </head>
 <body>

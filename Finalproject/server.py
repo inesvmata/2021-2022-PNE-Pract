@@ -9,8 +9,21 @@ import json
 
 SERVER = 'rest.ensembl.org'
 PARAMS = '?content-type=application/json'
-LIST_SEQUENCES = ["AAAGGGCCCTTTT", "AGGGCCCTT", "GGGTTTCCCAAA", "TTTAAAGGGAAACCCC", "GGTTAACCCTTAAGGAAAA", "AAGGGTTTCCCC"]
-LIST_GENES = ["ADA", "FRAT1", "FXN", "RNU5A", "U5"]
+GENES = {"FRAT1": "ENSG00000165879",
+             "ADA": "ENSG00000196839",
+             "FXN": "ENSG00000165060",
+             "RNU6_269P": "ENSG00000212379",
+             "MIR633": "ENSG00000207552",
+             "TTTY4C": "ENSG00000228296",
+             "RBMY2YP": "ENSG00000227633",
+             "FGFR3": "ENSG00000068078",
+             "KDR": "ENSG00000128052",
+             "ANK2": "ENSG00000145362"}
+
+
+list_names = []
+for n in GENES.keys():
+    list_names.append(n)
 
 
 def read_html_file(filename):
@@ -18,17 +31,13 @@ def read_html_file(filename):
     contents = j.Template(contents)
     return contents
 
-def request_json(endpoint, parameter):
+def make_ensembl_request(endpoint,parameter):
     SERVER = 'rest.ensembl.org'
     PARAMS = '?content-type=application/json'
 
     print(f"\nServer: {SERVER}")
-
-    # Connect with the server
     conn = http.client.HTTPConnection(SERVER)
 
-    # -- Send the request message, using the GET method. We are
-    # -- requesting the main page (/)
     try:
         conn.request("GET", endpoint + PARAMS + parameter)
     except ConnectionRefusedError:
@@ -43,11 +52,11 @@ def request_json(endpoint, parameter):
 
     # -- Read the response's body
     data1 = r1.read().decode("utf-8")
-    data1 = json.loads(data1)  # to transform it to a dictionary, it transforms the data into its corresponding type.
-    return data1
+    answer = json.loads(data1)  # to transform it to a dictionary, it transforms the data into its corresponding type.
+    return answer
 
 # Define the Server's port
-PORT = 8080
+PORT = 8081
 
 
 # -- This is for preventing the error: "Port already in use"
@@ -73,24 +82,47 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         print("The new path is", url_path.path) #these paths have all different paths
 
         if path == "/":
-            contents = read_html_file("index.html").render(context={})
+            contents = read_html_file("index.html").render(context={"n_names": list_names})
         elif path == "/listSpecies":
-            answer = request_json('/info/species', "")
-            species = answer["species"]
+            answer = make_ensembl_request("/info/species", "")
+            s = answer["species"]
             try:
                 name_species = []
-                limit = int(arguments["limit"][0])
+                limit = int(arguments['limit'][0])
                 for i in range(0, limit):
-                    name_species.append(species[i]['display_name'])
-                contents = read_html_file(path[1:] + ".html").render(context={"species": name_species, "n_species": len(species), "limit": limit})
-            except Exception:
+                    name_species.append(s[i]["display_name"])
+                contents = read_html_file(path[1:] + ".html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
+            except KeyError:
                 contents = Path("ERROR.html").read_text()
+        elif path == "/karyotype":
+            try:
+                specie = str(arguments['specie'][0].strip())
+                answer = make_ensembl_request("/info/assembly", specie)
+                karyotype = answer["karyotype"]
+                contents = read_html_file(path[1:] + ".html").render(context={"karyotype": karyotype})
+            except KeyError:
+                contents = Path("ERROR.html").read_text()
+        elif path == "/chromosomeLength":
+            try:
+                specie = str(arguments['specie'][0].strip())
+                answer = make_ensembl_request("/info/assembly", specie)
+                chromo = int(arguments["chromosome"][0])
+                dictionary = answer["top_level_region"]
+                list_chromosome = []
+                for i in range(len(dictionary)):
+                    list_chromosome.append(dictionary[i]["name"])
+                position = list_chromosome.index(str(chromo)) #la posición en la que está ese cromosoma, para de ahí asacr su length
+                length = int(answer[position]["length"])
+                contents = read_html_file(path[1:] + ".html").render(context={"length": length})
+            except KeyError:
+                contents = Path("ERROR.html").read_text()
+
+
         else:
             contents = Path("ERROR.html").read_text()
 
-        # Open the form1.html file
-        # Read the index from the file
-        #contents = Path('form-1.html').read_text()
+
+
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!
