@@ -9,6 +9,10 @@
     <h2>Species names {{context.species}}</h2>
     <p>Total number of species in ensembl: {{context.n_species}} </p>
     <p>The limit selected is: {{context.limit}}</p>
+    Species names:
+    {% for s in context.species %}
+    <p>{{s}}</p>
+    {% endfor %}
     <a href="/">Main page</a>
 </body>
 </html>

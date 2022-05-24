@@ -7,7 +7,8 @@ from urllib.parse import parse_qs, urlparse
 import http.client
 import json
 
-
+SERVER = 'rest.ensembl.org'
+PARAMS = '?content-type=application/json'
 LIST_SEQUENCES = ["AAAGGGCCCTTTT", "AGGGCCCTT", "GGGTTTCCCAAA", "TTTAAAGGGAAACCCC", "GGTTAACCCTTAAGGAAAA", "AAGGGTTTCCCC"]
 LIST_GENES = ["ADA", "FRAT1", "FXN", "RNU5A", "U5"]
 
@@ -16,48 +17,6 @@ def read_html_file(filename):
     contents = Path(filename).read_text()
     contents = j.Template(contents)
     return contents
-
-
-def seq_count(sequence):
-    d = {'A': 0, 'T': 0, 'C': 0, 'G': 0}
-    for i in sequence:
-        d[i] += 1
-    total = sum(d.values())
-    for k, v in d.items():
-        d[k] = [v, (v * 100) / total]
-    return d
-
-
-def convert_message(base_count):
-    message = ""
-    for k, v in base_count.items():
-        message += k + ":" + str(v[0]) + " (" + str(round(v[1], 2)) + "%)" + "\n"
-    return message
-
-
-def info_operation(arg):
-    base_count = seq_count(arg)
-    response = "Sequence: " + arg + "\n"
-    response += "Total length: " + str(len(arg)) + "\n"
-    response += convert_message(base_count)
-    return response
-
-def seq_complement(sequence):
-    d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
-    complement = ""
-    for i in sequence:
-        new_bases = d[i]
-        complement += new_bases
-    return complement
-
-
-
-# Define the Server's port
-PORT = 8080
-
-
-# -- This is for preventing the error: "Port already in use"
-socketserver.TCPServer.allow_reuse_address = True
 
 def request_json(endpoint, parameter):
     SERVER = 'rest.ensembl.org'
@@ -71,7 +30,7 @@ def request_json(endpoint, parameter):
     # -- Send the request message, using the GET method. We are
     # -- requesting the main page (/)
     try:
-        conn.request("GET", endpoint + parameter + PARAMS)
+        conn.request("GET", endpoint + PARAMS + parameter)
     except ConnectionRefusedError:
         print("ERROR! Cannot connect to the Server")
         exit()
@@ -85,7 +44,14 @@ def request_json(endpoint, parameter):
     # -- Read the response's body
     data1 = r1.read().decode("utf-8")
     data1 = json.loads(data1)  # to transform it to a dictionary, it transforms the data into its corresponding type.
-    print(data1)
+    return data1
+
+# Define the Server's port
+PORT = 8080
+
+
+# -- This is for preventing the error: "Port already in use"
+socketserver.TCPServer.allow_reuse_address = True
 
 # Class with our Handler. It is a called derived from BaseHTTPRequestHandler
 # It means that our class inheritates all his methods and properties
@@ -108,23 +74,19 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         if path == "/":
             contents = read_html_file("index.html").render(context={})
-        elif path == "/species":
-            ENDPOINT = 'info/species'
-            Species = request_json(ENDPOINT, "")
-            species = Species["species"]
+        elif path == "/listSpecies":
+            answer = request_json('/info/species', "")
+            species = answer["species"]
             try:
                 name_species = []
                 limit = int(arguments["limit"][0])
                 for i in range(0, limit):
-                    name_species.append(species[i]["display_name"])
-                contents = read_html_file(path[1:] + ".html").render(context={"species": name_species, "n_species": len(name_species), "limit": limit})
+                    name_species.append(species[i]['display_name'])
+                contents = read_html_file(path[1:] + ".html").render(context={"species": name_species, "n_species": len(species), "limit": limit})
             except Exception:
-                contents = read_html_file("ERROR.html").render()
-
-
-
+                contents = Path("ERROR.html").read_text()
         else:
-            contents = read_html_file("ERROR.html").render()
+            contents = Path("ERROR.html").read_text()
 
         # Open the form1.html file
         # Read the index from the file
