@@ -1,17 +1,17 @@
-class Seq:
-    "A class for representing sequences"
-    def __init__(self,strbases="NULL"):
+class Seq():
+    def __init__(self, strbases="NULL"):
         self.strbases = strbases
-        if not self.valid_sequence():
-            self.strbases = "ERROR"
-            print("INVALID sequence created!!!!")
-        elif self.strbases == "":
+        if strbases == "NULL":
+            print("NULL sequence created")
             self.strbases = "NULL"
-            print("NULL sequence created!")
+        elif not self.valid_sequence():
+            print("INVALID Seq!")
+            self.strbases = "ERROR"
         else:
             print("New sequence created!")
+            self.strbases = strbases
 
-    def valid_sequence(self):
+    def valid_sequence(self): #as this function belongs to Seq class, we have to write it below the init method
         valid = True
         i = 0
         while i < len(self.strbases) and valid:
@@ -22,6 +22,11 @@ class Seq:
         return valid
 
     def __str__(self):
+        return self.strbases
+
+    def seq_read_fasta(self, filename):
+        f = open("../P0/" + "./sequences/" + filename, "r").read()
+        self.strbases = f[f.find("\n"):].replace("\n", "")
         return self.strbases
 
     def len(self):
@@ -47,7 +52,8 @@ class Seq:
             elif i == "A":
                 count_A += 1
         return count_C, count_G, count_T, count_A
-    def count_base2(self,strbases="NULL"):
+
+    def count_base2(self, strbases="NULL"):
         count_C = 0
         count_G = 0
         count_T = 0
@@ -74,9 +80,9 @@ class Seq:
         else:
             for i in self.strbases:
                 d[i] += 1
-                total = sum(d.values())
-                for k,v in d.items():
-                    d[k] = [v, (v * 100) / total]
+            total = sum(d.values())
+            for k,v in d.items():
+                d[k] = [v, (v * 100) / total]
         return d
 
     def convert_message(self, base_count):
@@ -85,11 +91,11 @@ class Seq:
             message += k + ":" + str(v[0]) + " (" + str(round(v[1], 2)) + "%)" + "\n"
         return message
 
-    def info_operation(self):
+    def info_operation(self, arg):
         base_count = self.seq_count()
-        response = self.convert_message(base_count)
+        response = "Total length: " + str(len(arg)) + "\n"
+        response += self.convert_message(base_count)
         return response
-
 
     def seq_reverse(self):
         reverse = []
@@ -111,13 +117,19 @@ class Seq:
                 complement += new_bases
         return complement
 
-    def seq_read_fasta(self, filename):
-        f = open("../P0/" + "./sequences/" + filename, "r").read() #el P0 lo he puesto yo pero no funciona
-        self.strbases = f[f.find("\n"):].replace("\n", "")
-        return self.strbases
+    def add_seq(self):
+        d = {'A': 4, 'T': -6, 'C': -3, 'G': 7}
+        addition = 0
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            addition = "We could not sum the bases since the sequence is not correct."
+        else:
+            for i in self.strbases:
+                addition += d[i]
+        return addition
 
-    def max_base(self, count_C, count_G, count_T, count_A, sequence):
+    def max_base(self, sequence):
         max_base = ""
+        count_C, count_G, count_T, count_A = self.count_base()
         for i in sequence:
             if (count_C > count_G) and (count_C > count_T) and (count_C > count_A):
                 max_base = "C"

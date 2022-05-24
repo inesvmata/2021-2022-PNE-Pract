@@ -53,9 +53,9 @@ print("Description: -->", data1['desc']) #ERROR
 print("Sequence: -->", data1['seq'])
 s = data1['seq']
 seq = Seq(s)
-print("Total length: -->", Seq.len(seq))
-#print(str(Seq.info_operation(seq)))
-#base_count = Seq.seq_count(seq)
-#print(Seq.convert_message(base_count))
+response = str(seq.info_operation(s))
+print(response)
+response2 = str(seq.max_base(s))
+print("Most frequent base: -->", response2)
 # -- Print the received data
 #print(f"CONTENT: {data1}") #type(data1["ping"]) is an integer number, because json has transformed it into an integer.

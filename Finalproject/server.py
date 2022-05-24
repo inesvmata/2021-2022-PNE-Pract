@@ -4,9 +4,10 @@ import termcolor
 from pathlib import Path
 import jinja2 as j
 from urllib.parse import parse_qs, urlparse
+import http.client
+import json
 
 
-#HTML_FOLDER = "/"
 LIST_SEQUENCES = ["AAAGGGCCCTTTT", "AGGGCCCTT", "GGGTTTCCCAAA", "TTTAAAGGGAAACCCC", "GGTTAACCCTTAAGGAAAA", "AAGGGTTTCCCC"]
 LIST_GENES = ["ADA", "FRAT1", "FXN", "RNU5A", "U5"]
 
@@ -58,6 +59,33 @@ PORT = 8080
 # -- This is for preventing the error: "Port already in use"
 socketserver.TCPServer.allow_reuse_address = True
 
+def request_json(endpoint, parameter):
+    SERVER = 'rest.ensembl.org'
+    PARAMS = '?content-type=application/json'
+
+    print(f"\nServer: {SERVER}")
+
+    # Connect with the server
+    conn = http.client.HTTPConnection(SERVER)
+
+    # -- Send the request message, using the GET method. We are
+    # -- requesting the main page (/)
+    try:
+        conn.request("GET", endpoint + parameter + PARAMS)
+    except ConnectionRefusedError:
+        print("ERROR! Cannot connect to the Server")
+        exit()
+
+    # -- Read the response message from the server
+    r1 = conn.getresponse()
+
+    # -- Print the status line
+    print(f"Response received!: {r1.status} {r1.reason}\n")
+
+    # -- Read the response's body
+    data1 = r1.read().decode("utf-8")
+    data1 = json.loads(data1)  # to transform it to a dictionary, it transforms the data into its corresponding type.
+    print(data1)
 
 # Class with our Handler. It is a called derived from BaseHTTPRequestHandler
 # It means that our class inheritates all his methods and properties
@@ -79,40 +107,24 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         print("The new path is", url_path.path) #these paths have all different paths
 
         if path == "/":
-            contents = read_html_file("index.html").render(context={"n_sequence": len(LIST_SEQUENCES), "genes": LIST_GENES})
-
-        elif path == "/ping":
-            contents = read_html_file(path[1:] + ".html").render() #THIS IS HOW TO EXTRACT THE FILENAME
-
-        elif path == "/get":
-            n_sequence = int(arguments["n_sequence"][0]) #this is always going to be an integer
-            #&number = value
-            #params = "&number=" + str(n_sequence)
-            #ensembl_answer = make_call("/sequence/id", params)
-            sequence = LIST_SEQUENCES[n_sequence]
-            contents = read_html_file(path[1:] + ".html").render(context={"n_sequence": n_sequence, "sequence": sequence})
-
-        elif path == "/gene":
-            gene_name = arguments["genes"][0]
-            sequence = Path("./sequences/" + gene_name).read_text()
-            sequence = sequence[sequence.find("\n"):].replace("\n", "")
-            contents = read_html_file(path[1:] + ".html").render(context={"gene_name": gene_name, "sequence": sequence})
-
-        elif path == "/operation":
-            sequence = arguments["sequence"][0]
-            operation = arguments["operation"][0]
-            if operation == "rev":
-                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "operation": operation, "result": sequence[::-1]})
-            elif operation == "info":
-                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "operation": operation, "result": info_operation(sequence)})
-            elif operation == "comp":
-                contents = read_html_file(path[1:] + ".html").render(
-                    context={"sequence": sequence, "operation": operation, "result": seq_complement(sequence)})
+            contents = read_html_file("index.html").render(context={})
+        elif path == "/species":
+            ENDPOINT = 'info/species'
+            Species = request_json(ENDPOINT, "")
+            species = Species["species"]
+            try:
+                name_species = []
+                limit = int(arguments["limit"][0])
+                for i in range(0, limit):
+                    name_species.append(species[i]["display_name"])
+                contents = read_html_file(path[1:] + ".html").render(context={"species": name_species, "n_species": len(name_species), "limit": limit})
+            except Exception:
+                contents = read_html_file("ERROR.html").render()
 
 
 
         else:
-            contents = Path("ERROR.html").read_text()
+            contents = read_html_file("ERROR.html").render()
 
         # Open the form1.html file
         # Read the index from the file
