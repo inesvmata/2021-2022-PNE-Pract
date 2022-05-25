@@ -6,6 +6,7 @@ import jinja2 as j
 from urllib.parse import parse_qs, urlparse
 import http.client
 import json
+from Seqclass import Seq
 
 SERVER = 'rest.ensembl.org'
 PARAMS = '?content-type=application/json'
@@ -39,7 +40,7 @@ def make_ensembl_request(endpoint,parameter):
     conn = http.client.HTTPConnection(SERVER)
 
     try:
-        conn.request("GET", endpoint + PARAMS + parameter)
+        conn.request("GET", endpoint + parameter + PARAMS)
     except ConnectionRefusedError:
         print("ERROR! Cannot connect to the Server")
         exit()
@@ -83,7 +84,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         if path == "/":
             contents = read_html_file("index.html").render(context={"n_names": list_names})
-        elif path == "/listSpecies":
+
+        #BASIC LEVEL
+        elif path == "/listSpecies": #si no pone limite, que salgan todas las especies
             answer = make_ensembl_request("/info/species", "")
             s = answer["species"]
             try:
@@ -91,31 +94,87 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 limit = int(arguments['limit'][0])
                 for i in range(0, limit):
                     name_species.append(s[i]["display_name"])
-                contents = read_html_file(path[1:] + ".html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
+                contents = read_html_file("species.html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
         elif path == "/karyotype":
             try:
-                specie = str(arguments['specie'][0].strip())
-                answer = make_ensembl_request("/info/assembly", specie)
+                species = str(arguments['specie'][0].strip())
+                answer = make_ensembl_request("/info/assembly/", species)
                 karyotype = answer["karyotype"]
-                contents = read_html_file(path[1:] + ".html").render(context={"karyotype": karyotype})
+                contents = read_html_file("karyotype.html").render(context={"karyotype": karyotype})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
         elif path == "/chromosomeLength":
             try:
-                specie = str(arguments['specie'][0].strip())
-                answer = make_ensembl_request("/info/assembly", specie)
-                chromo = int(arguments["chromosome"][0])
+                species = str(arguments['specie'][0].strip())
+                answer = make_ensembl_request("/info/assembly/", species)
+                chromo = int(arguments["chromosome"][0].strip())
                 dictionary = answer["top_level_region"]
                 list_chromosome = []
                 for i in range(len(dictionary)):
                     list_chromosome.append(dictionary[i]["name"])
                 position = list_chromosome.index(str(chromo)) #la posición en la que está ese cromosoma, para de ahí asacr su length
-                length = int(answer[position]["length"])
+                position2 = dictionary[position]
+                length = int(position2["length"])
                 contents = read_html_file(path[1:] + ".html").render(context={"length": length})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
+
+        #MEDIUM LEVEL
+        elif path == "/geneSeq":
+            try:
+                gene = str(arguments['gene'][0].strip())
+                key = str(GENES[gene]) #no quiero el nombre, quiero el gen
+                answer = make_ensembl_request("/sequence/id/", key)
+                sequence = str(answer['seq'])
+                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence})
+            except KeyError:
+                contents = Path("ERROR.html").read_text()
+
+        elif path == "/geneInfo":
+            try:
+                gene = str(arguments['info'][0].strip()) #EL GENE QUE EL USUARIO MANDA
+                key = str(GENES[gene])
+                answer = make_ensembl_request("/sequence/id/", key)
+                #print(answer)
+                chromo_info = answer['desc'].split(":") #está en desc #aquí no queremos la posición 0
+                name_chromo = int(chromo_info[2])
+                start = int(chromo_info[3])
+                end = int(chromo_info[4])
+                length = int(end - start)
+                id = str(answer['id']) #o id = key
+                contents = read_html_file(path[1:] + ".html").render(context={"start": start, "end": end, "name_chromo": name_chromo, "length": length, "id": id})
+            except KeyError:
+                contents = Path("ERROR.html").read_text()
+
+        elif path == "/geneCalc": #CREO QUE SE PONDRÍA ANTES DEL TRY EL GENE Y EL KEY
+            try:
+                gene = str(arguments['calculation'][0].strip())
+                key = str(GENES[gene])
+                answer = make_ensembl_request("/sequence/id/", key)
+                sequence = str(answer['seq'])
+                seq = Seq(sequence)
+                calculations = seq.info_operation(sequence)
+                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "calculations": calculations})
+            except KeyError:
+                contents = Path("ERROR.html").read_text()
+
+        elif path == "/geneList":
+            species = str(arguments['specie'][0].strip())
+            chromo = str(arguments['chromo'][0].strip())
+            start = str(arguments['start'][0].strip())
+            end = str(arguments['end'][0].strip())
+            region = chromo + ":" + start + "-" + end
+            answer = make_ensembl_request("/phenotype/region/", species + "/" + region)
+            print(answer)
+            #dentro de phenotype associations, el id
+            #phenotype = str(answer['phenotype_associations'][0])
+
+
+
+
+
 
 
         else:
