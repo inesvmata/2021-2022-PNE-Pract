@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>geneList</title>
+</head>
+<body>
+Names of the genes:
+    <ul>
+    {% for g in context.gene %}
+    <li><p>{{g}}</p></li>
+    {% endfor %}
+    </ul>
+    <a href="/">Main page</a>
+</body>
+</html>

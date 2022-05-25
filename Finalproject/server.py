@@ -94,7 +94,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 limit = int(arguments['limit'][0])
                 for i in range(0, limit):
                     name_species.append(s[i]["display_name"])
-                contents = read_html_file("species.html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
+                    if "json" in arguments:
+                        contents = {"species": name_species, "n_species": len(s), "limit": limit}
+                    else:
+                        contents = read_html_file("species.html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
         elif path == "/karyotype":
@@ -102,7 +105,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 species = str(arguments['specie'][0].strip())
                 answer = make_ensembl_request("/info/assembly/", species)
                 karyotype = answer["karyotype"]
-                contents = read_html_file("karyotype.html").render(context={"karyotype": karyotype})
+                if "json" in arguments:
+                    contents = {"karyotype": karyotype}
+                else:
+                    contents = read_html_file("karyotype.html").render(context={"karyotype": karyotype})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
         elif path == "/chromosomeLength":
@@ -117,7 +123,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 position = list_chromosome.index(str(chromo)) #la posición en la que está ese cromosoma, para de ahí asacr su length
                 position2 = dictionary[position]
                 length = int(position2["length"])
-                contents = read_html_file(path[1:] + ".html").render(context={"length": length})
+                if "json" in arguments:
+                    contents = {"length": length}
+                else:
+                    contents = read_html_file(path[1:] + ".html").render(context={"length": length})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
 
@@ -128,7 +137,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 key = str(GENES[gene]) #no quiero el nombre, quiero el gen
                 answer = make_ensembl_request("/sequence/id/", key)
                 sequence = str(answer['seq'])
-                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence})
+                if "json" in arguments:
+                    contents = {"sequence": sequence}
+                else:
+                    contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
 
@@ -144,7 +156,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 end = int(chromo_info[4])
                 length = int(end - start)
                 id = str(answer['id']) #o id = key
-                contents = read_html_file(path[1:] + ".html").render(context={"start": start, "end": end, "name_chromo": name_chromo, "length": length, "id": id})
+                if "json" in arguments:
+                    contents = {"start": start, "end": end, "name_chromo": name_chromo, "length": length, "id": id}
+                else:
+                    contents = read_html_file(path[1:] + ".html").render(context={"start": start, "end": end, "name_chromo": name_chromo, "length": length, "id": id})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
 
@@ -156,20 +171,43 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 sequence = str(answer['seq'])
                 seq = Seq(sequence)
                 calculations = seq.info_operation(sequence)
-                contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "calculations": calculations})
+                if "json" in arguments:
+                    contents = {"sequence": sequence, "calculations": calculations}
+                else:
+                    contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "calculations": calculations})
             except KeyError:
                 contents = Path("ERROR.html").read_text()
 
         elif path == "/geneList":
-            species = str(arguments['specie'][0].strip())
-            chromo = str(arguments['chromo'][0].strip())
-            start = str(arguments['start'][0].strip())
-            end = str(arguments['end'][0].strip())
-            region = chromo + ":" + start + "-" + end
-            answer = make_ensembl_request("/phenotype/region/", species + "/" + region)
-            print(answer)
-            #dentro de phenotype associations, el id
-            #phenotype = str(answer['phenotype_associations'][0])
+            try:
+                species = str(arguments['specie'][0].strip())
+                chromo = str(arguments['chromo'][0].strip())
+                start = str(arguments['start'][0].strip())
+                end = str(arguments['end'][0].strip())
+                region = chromo + ":" + start + "-" + end
+                answer = make_ensembl_request("/phenotype/region/", species + "/" + region)
+                #print(answer)
+                #dentro de phenotype associations
+                final_gene = []
+                for i in range(0, len(answer)):
+                    for o in answer[i]["phenotype_associations"]:
+                        if "attributes" in o:
+                            if "associated_gene" in o["attributes"]:
+                                final_gene.append(o["attributes"]["associated_gene"])
+                                #print(final_gene)
+                if "json" in arguments:
+                    contents = {"gene": final_gene}
+                else:
+                    contents = read_html_file(path[1:] + ".html").render(context={"gene": final_gene})
+            except KeyError:
+                contents = Path("ERROR.html").read_text()
+
+        #ADVANCED LEVEL
+
+
+
+
+
 
 
 
@@ -186,8 +224,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!
 
-        # Define the content-type header:
-        self.send_header('Content-Type', 'text/html')
+        if "json" in arguments.keys():
+            contents = json.dumps(contents)
+            self.send_header('Content-Type', 'application/json')
+
+        else:
+            self.send_header('Content-Type', 'text/html')
+
         self.send_header('Content-Length', len(str.encode(contents)))
 
         # The header is finished
