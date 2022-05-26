@@ -99,7 +99,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     else:
                         contents = read_html_file("species.html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
             except KeyError:
-                contents = Path("ERROR.html").read_text()
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
         elif path == "/karyotype":
             try:
                 species = str(arguments['specie'][0].strip())
@@ -110,7 +113,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contents = read_html_file("karyotype.html").render(context={"karyotype": karyotype})
             except KeyError:
-                contents = Path("ERROR.html").read_text()
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
         elif path == "/chromosomeLength":
             try:
                 species = str(arguments['specie'][0].strip())
@@ -128,7 +134,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contents = read_html_file(path[1:] + ".html").render(context={"length": length})
             except KeyError:
-                contents = Path("ERROR.html").read_text()
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
 
         #MEDIUM LEVEL
         elif path == "/geneSeq":
@@ -142,7 +151,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence})
             except KeyError:
-                contents = Path("ERROR.html").read_text()
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
 
         elif path == "/geneInfo":
             try:
@@ -161,7 +173,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contents = read_html_file(path[1:] + ".html").render(context={"start": start, "end": end, "name_chromo": name_chromo, "length": length, "id": id})
             except KeyError:
-                contents = Path("ERROR.html").read_text()
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
 
         elif path == "/geneCalc": #CREO QUE SE PONDRÍA ANTES DEL TRY EL GENE Y EL KEY
             try:
@@ -176,7 +191,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contents = read_html_file(path[1:] + ".html").render(context={"sequence": sequence, "calculations": calculations})
             except KeyError:
-                contents = Path("ERROR.html").read_text()
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
 
         elif path == "/geneList":
             try:
@@ -200,21 +218,12 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contents = read_html_file(path[1:] + ".html").render(context={"gene": final_gene})
             except KeyError:
-                contents = Path("ERROR.html").read_text()
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
 
         #ADVANCED LEVEL
-
-
-
-
-
-
-
-
-
-
-
-
         else:
             contents = Path("ERROR.html").read_text()
 

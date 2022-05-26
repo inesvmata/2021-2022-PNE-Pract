@@ -30,12 +30,12 @@ def make_ensembl_request(endpoint,parameter):
     return answer
 
 #ADVANCED LEVEL
-print("List of species: ") #primero listSpeciesy y después print
 listSpecies = make_ensembl_request("/listSpecies?","limit=8&json=1")
+print("List of species: ")
 print(listSpecies)
 
-print("karyotype")
 karyotype = make_ensembl_request("/karyotype?","specie=human&json=1")
+print("karyotype")
 print(karyotype)
 
 chromosome_length = make_ensembl_request("/chromosomeLength?","specie=human&chromosome=9&json=1")
@@ -54,6 +54,6 @@ geneCalc = make_ensembl_request("/geneCalc?","calculation=FRAT1&json=1")
 print("Calculations on the gene:")
 print(geneCalc)
 
-geneList = make_ensembl_request("/geneList?","specie=human&chromo=9&start=221255000&end=221360000&json=1") #ERROR
+geneList = make_ensembl_request("/geneList?","specie=human&chromo=9&start=22125500&end=22136000&json=1")
 print("Names of the genes in the given range:")
 print(geneList)
