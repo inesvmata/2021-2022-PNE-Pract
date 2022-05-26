@@ -132,23 +132,31 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             try:
                 species = str(arguments['specie'][0].strip())
                 answer = make_ensembl_request("/info/assembly/", species)
-                chromo = int(arguments["chromosome"][0].strip())
+                chromo = int(arguments["chromosome"][0].strip()) #AHORA VA A SER UN NÚMERO, LA LENGTH QUE BUSCO
                 dictionary = answer["top_level_region"]
-                list_chromosome = []
-                for i in range(len(dictionary)):
-                    list_chromosome.append(dictionary[i]["name"])
-                position = list_chromosome.index(str(chromo)) #la posición en la que está ese cromosoma, para de ahí asacr su length
-                position2 = dictionary[position]
-                length = int(position2["length"])
-                if "json" in arguments:
-                    contents = {"length": length}
+                print(dictionary)
+                list_lengths = []
+                if chromo <= 0:
+                    contents = Path("ERROR.html").read_text()
                 else:
-                    contents = read_html_file(path[1:] + ".html").render(context={"length": length})
-            except KeyError:
+                    for i in range(len(dictionary)):
+                        if (dictionary[i]["coord_system"] == "chromosome") and (int(dictionary[i]["length"]) > chromo):
+                            list_lengths.append(dictionary[i]["name"]) #lista con los nombres
+                    if "json" in arguments:
+                        contents = {"names": list_lengths}
+                    else:
+                        contents = read_html_file(path[1:] + ".html").render(context={"names": list_lengths})
+            except KeyError: #ValueError por simeten algo que no sea un int
                 if "json" in arguments:
                     contents = {"ERROR": "A key error has occurred"}
                 else:
                     contents = Path("ERROR.html").read_text()
+            except ValueError:
+                if "json" in arguments:
+                    contents = {"ERROR": "A key error has occurred"}
+                else:
+                    contents = Path("ERROR.html").read_text()
+
 
         #MEDIUM LEVEL
         elif path == "/geneSeq":
