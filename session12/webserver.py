@@ -29,6 +29,7 @@ def process_client(s):
     # header
     # blank line
     # Body (content to send)
+    body = "Hello from my first web server!\n"
 
     # -- Let's start with the body
     route = req_line.split(" ")[1]

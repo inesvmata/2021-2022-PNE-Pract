@@ -1,6 +1,7 @@
 import http.server
 import socketserver
 import termcolor
+import pathlib
 
 # Define the Server's port
 PORT = 8080
@@ -19,6 +20,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         # Print the request line
         termcolor.cprint(self.requestline, 'green')
+        route = self.requestline.split(" ")[1]
+        if route == "/":
+            contents = pathlib.Path("index.html").read_text()
+        elif route == "/index.html":
+            contents = pathlib.Path("index.html").read_text()
+        else:
+            contents = "ERROR"
 
         # IN this simple server version:
         # We are NOT processing the client's request
@@ -26,7 +34,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # that everything is ok
 
         # Message to send back to the clinet
-        contents = "I am the happy server! :-)" #si no enviamos un mensaje de respuesta, en el browser nos sale error
+        #contents = "I am the happy server! :-)" #si no enviamos un mensaje de respuesta, en el browser nos sale error
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!

@@ -19,6 +19,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         # Print the request line
         termcolor.cprint(self.requestline, 'green')
+        route = self.requestline.split(" ")[1]
+        if route == "/":
+            contents = "Welcome to my server"
+        else:
+            contents = "Resource not available"
 
         # IN this simple server version:
         # We are NOT processing the client's request
@@ -26,7 +31,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # that everything is ok
 
         # Message to send back to the clinet
-        contents = "I am the happy server! :-)" #si no enviamos un mensaje de respuesta, en el browser nos sale error
+        #contents = "I am the happy server! :-)" #si no enviamos un mensaje de respuesta, en el browser nos sale error
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!

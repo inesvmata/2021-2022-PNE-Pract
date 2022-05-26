@@ -1,6 +1,6 @@
 import socket
 import termcolor
-import pathlib
+
 
 # -- Server network parameters
 IP = "127.0.0.1"
@@ -16,7 +16,6 @@ def process_client(s):
 
     # -- Split the request messages into lines
     lines = req.split('\n')
-    print(lines)
 
     # -- The request line is the first
     req_line = lines[0]
@@ -31,41 +30,14 @@ def process_client(s):
     # blank line
     # Body (content to send)
 
-    # This new contents are written in HTML language
-    body = """
-    <!DOCTYPE html>
-    <html lang="en" dir="ltr">
-      <head>
-        <meta charset="utf-8">
-        <title>Green server</title>
-      </head>
-      <body style="background-color: lightgreen;">
-        <h1>GREEN SERVER</h1>
-        <p>I am the Green Server! :-)</p>
-      </body>
-    </html>
-    """
-    route = req_line.split(" ")[1]
-    print("ROUTE", route)
-
-    if route == "/":
-        body = pathlib.Path("index.html").read_text()  # CREO que se puede usar para leer textos de otra carpeta
-    # body = "Hello from my first web server!\n"
-    elif route == "/info/A":
-        body = pathlib.Path("html/info/A.html").read_text()
-    elif route == "/info/C":
-        body = pathlib.Path("html/info/C.html").read_text()
-    elif route == "/info/G":
-        body = pathlib.Path("html/info/G.html").read_text()
-    else:
-        body = pathlib.Path("html/ERROR.html").read_text()
-
+    # -- Let's start with the body
+    body = "Hello from my first web server!\n"
 
     # -- Status line: We respond that everything is ok (200 code)
     status_line = "HTTP/1.1 200 OK\n"
 
     # -- Add the Content-Type header
-    header = "Content-Type: text/html\n"
+    header = "Content-Type: text/plain\n"
 
     # -- Add the Content-Length
     header += f"Content-Length: {len(body)}\n"
