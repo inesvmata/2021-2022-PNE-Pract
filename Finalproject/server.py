@@ -89,20 +89,30 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         elif path == "/listSpecies": #si no pone limite, que salgan todas las especies
             answer = make_ensembl_request("/info/species", "")
             s = answer["species"]
+            #name_species2 = []
             try:
-                name_species = []
+                name_species = [] #si no pones nada en el limit es un type error
                 limit = int(arguments['limit'][0])
                 for i in range(0, limit):
                     name_species.append(s[i]["display_name"])
-                    if "json" in arguments:
-                        contents = {"species": name_species, "n_species": len(s), "limit": limit}
-                    else:
-                        contents = read_html_file("species.html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
-            except KeyError:
+                if "json" in arguments:
+                    contents = {"species": name_species, "n_species": len(s), "limit": limit}
+                else:
+                    contents = read_html_file("species.html").render(context={"species": name_species, "n_species": len(s), "limit": limit})
+            except ValueError: #el limit se sale del range
                 if "json" in arguments:
                     contents = {"ERROR": "A key error has occurred"}
                 else:
                     contents = Path("ERROR.html").read_text()
+            except KeyError:
+                name_species2 = []
+                for i in range(0, len(s)):
+                    name_species2.append(s[i]["display_name"])
+                if "json" in arguments:
+                    contents = {"species": name_species2, "n_species": len(s), "limit": "no limit specified"}
+                else:
+                    contents = read_html_file("species.html").render(context={"species": name_species2, "n_species": len(s), "limit": "no limit specified"})
+
         elif path == "/karyotype":
             try:
                 species = str(arguments['specie'][0].strip())
@@ -117,6 +127,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     contents = {"ERROR": "A key error has occurred"}
                 else:
                     contents = Path("ERROR.html").read_text()
+
         elif path == "/chromosomeLength":
             try:
                 species = str(arguments['specie'][0].strip())
